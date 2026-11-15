@@ -64,6 +64,16 @@ Demonstrar a criação de um túnel VPN seguro (cifrado e autenticado) implement
 3. Suba o ambiente:
    ```bash
    docker-compose up -d
+   docker exec strongswan-server sh -c "ln -sf /etc/ipsec.d/ipsec.conf /etc/ipsec.conf && ln -sf /etc/ipsec.d/ipsec.secrets /etc/ipsec.secrets && ipsec restart"
+   docker exec strongswan-client sh -c "ln -sf /etc/ipsec.d/ipsec.conf /etc/ipsec.conf && ln -sf /etc/ipsec.d/ipsec.secrets /etc/ipsec.secrets && ipsec restart"
+
+   #validar estabelecimento do tunel, conexao e criptografia
+   docker exec strongswan-server ipsec status
+
+   docker exec strongswan-client ping -c 4 10.10.10.10
+
+   docker exec strongswan-server ip xfrm state
+   
    ```
 
 ### Fase 2: Infraestrutura de Chaves Públicas (PKI)
