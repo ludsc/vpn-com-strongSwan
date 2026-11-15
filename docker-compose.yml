@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  vpn-server:
+    image: alpine:latest
+    container_name: strongswan-server
+    # Permissões essenciais para manipular regras de rede e túneis no kernel
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    # Volumes mapeados para configurarmos o IPsec nos próximos passos
+    volumes:
+      - ./server-conf:/etc/ipsec.d
+    # Mantém o contêiner rodando e instala o strongswan
+    command: sh -c "apk update && apk add strongswan iptables && tail -f /dev/null"
+    networks:
+      lab_net:
+        ipv4_address: 10.10.10.10
+
+  vpn-client:
+    image: alpine:latest
+    container_name: strongswan-client
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    volumes:
+      - ./client-conf:/etc/ipsec.d
+    command: sh -c "apk update && apk add strongswan iptables && tail -f /dev/null"
+    networks:
+      lab_net:
+        ipv4_address: 10.10.10.20
+
+networks:
+  lab_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.0/24
