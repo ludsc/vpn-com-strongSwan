@@ -15,7 +15,7 @@ Demonstrar a criação de um túnel VPN seguro (cifrado e autenticado) implement
 ## 🚀 Passo a Passo para Reprodução
 
 
-3. Suba o ambiente:
+ Suba o ambiente:
    ```bash
 
    cd vpn-com-strongSwan
